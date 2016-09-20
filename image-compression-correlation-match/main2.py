@@ -1,0 +1,163 @@
+
+# coding: utf-8
+
+# #Assignment3_Q2
+# 
+# * Establish correspondences between the corners detected in three images of the same scene captured from different view points.
+
+# In[1]:
+
+# Importing the libraries
+import numpy as np
+import cv2
+import matplotlib.image as img
+import matplotlib.pyplot as plt
+
+from numpy import linalg as LA
+
+
+# In[2]:
+
+# Function converts RGB image to Gray scale image
+def rgb2gray(rgb):
+    return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
+
+
+# In[78]:
+
+# Load an color image 
+img1 = img.imread('IMG1.jpg')
+# Resizing the original image to half the size
+im_rs1 = cv2.resize(img1,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
+imGray1 = rgb2gray(im_rs1)        # Convert the colour image to gray scale
+m1,n1 = imGray1.shape            # Get the shape of the image
+
+# Load an color image 
+img2 = img.imread('IMG2.jpg')
+# Resizing the original image to half the size
+im_rs2 = cv2.resize(img2,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
+imGray2 = rgb2gray(im_rs2)        # Convert the colour image to gray scale
+m2,n2 = imGray2.shape            # Get the shape of the image
+
+# Load an color image 
+img3 = img.imread('IMG3.jpg')
+# Resizing the original image to half the size
+im_rs3 = cv2.resize(img3,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
+imGray3 = rgb2gray(im_rs3)        # Convert the colour image to gray scale
+
+m3,n3 = imGray3.shape            # Get the shape of the image
+
+# Plotting all images
+plt.subplot(131),plt.imshow(im_rs1),plt.title('Image 1')
+plt.xticks([]), plt.yticks([])
+plt.subplot(132),plt.imshow(im_rs2),plt.title('Image 2')
+plt.xticks([]), plt.yticks([])
+plt.subplot(133),plt.imshow(im_rs3),plt.title('Image 3')
+plt.xticks([]), plt.yticks([])
+plt.show()
+
+
+# Here we shall detect the keypoints from all the images in order to the correspondence match 
+# between two images. For this we will use ORB feature extraction technique instead of SIFT/SURF as it is open source. This section detects and computes the keypoints in the images and displays the images with keypoints. 
+
+# In[85]:
+
+orb = cv2.ORB()
+kp1, des1 = orb.detectAndCompute(im_rs1,None)
+kp2, des2 = orb.detectAndCompute(im_rs2,None)
+kp3, des3 = orb.detectAndCompute(im_rs3,None)
+
+# draw only keypoints location,not size and orientation
+imgkp1 = cv2.drawKeypoints(im_rs1,kp1,color=(0,255,0), flags=0)
+plt.imshow(imgkp1),plt.title('Image 1 with Keypoints')
+plt.xticks([]), plt.yticks([])
+plt.show()
+
+imgkp2 = cv2.drawKeypoints(im_rs2,kp2,color=(255,0,0), flags=0)
+plt.imshow(imgkp2),plt.title('Image 2 with Keypoints')
+plt.xticks([]), plt.yticks([])
+plt.show()
+
+imgkp3 = cv2.drawKeypoints(im_rs3,kp3,color=(0,0,255), flags=0)
+plt.imshow(imgkp3),plt.title('Image 3 with Keypoints')
+plt.xticks([]), plt.yticks([])
+plt.show()
+
+
+# In[86]:
+
+def drawMatches(img1, kp1, img2, kp2, matches):
+
+
+    # Create a new output image that concatenates the two images together
+   
+    rows1 = img1.shape[0]
+    cols1 = img1.shape[1]
+    rows2 = img2.shape[0]
+    cols2 = img2.shape[1]
+
+    out = np.zeros((max([rows1,rows2]),cols1+cols2,3), dtype='uint8')
+
+    # Place the first image to the left
+    out[:rows1,:cols1,:] = np.dstack([img1, img1, img1])
+
+    # Place the next image to the right of it
+    out[:rows2,cols1:cols1+cols2,:] = np.dstack([img2, img2, img2])
+
+    # For each pair of points we have between both images
+    # draw circles, then connect a line between them
+    for mat in matches:
+
+        # Get the matching keypoints for each of the images
+        img1_idx = mat.queryIdx
+        img2_idx = mat.trainIdx
+
+        # x - columns
+        # y - rows
+        (x1,y1) = kp1[img1_idx].pt
+        (x2,y2) = kp2[img2_idx].pt
+
+        # Draw a small circle at both co-ordinates
+        # radius 4
+        # colour blue
+        # thickness = 1
+        cv2.circle(out, (int(x1),int(y1)), 10, (255, 0, 0), 3)   
+        cv2.circle(out, (int(x2)+cols1,int(y2)), 10, (255, 0, 0), 3)
+
+        # Draw a line in between the two points
+        # thickness = 1
+        # colour blue
+        cv2.line(out, (int(x1),int(y1)), (int(x2)+cols1,int(y2)), (255, 0, 0), 5)
+    
+    plt.figure(figsize=(15,15))
+    plt.imshow(out),plt.title('Correspondence match between two images')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
+
+# Here we shall find the correspondence match between all the three images in order to find which feature point lies where in the other image. For this we shall use brute force method. And finally display the results.
+
+# In[87]:
+
+# create BFMatcher object
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+
+# Match descriptors.
+matches = bf.match(des1,des2)
+
+# Sort them in the order of their distance.
+matches = sorted(matches, key = lambda x:x.distance)
+
+# Draw first 15 matches.
+imgm1 = drawMatches(imGray1,kp1,imGray2,kp2, matches[:15])
+
+imgm2 = drawMatches(imGray2,kp2,imGray3,kp3, matches[:15])
+
+imgm3 = drawMatches(imGray1, kp1, imGray3, kp3, matches[:15])
+
+
+
+
+
+

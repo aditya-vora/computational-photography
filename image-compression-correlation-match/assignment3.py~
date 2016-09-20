@@ -1,0 +1,56 @@
+
+# coding: utf-8
+
+# # Assignment 3
+# 
+# 1. Perform image compression using SVD and validate using appropriate measure.
+# 
+# 2. Establish correspondences between the corners detected in three images of the same scene captured from different view points.
+
+# In[41]:
+
+# Problem statement 1: Perform image compression using SVD and validate the result using an
+# appropriate measure.
+import numpy as np
+import cv2
+
+# Load an color image in grayscale
+img = cv2.imread('image.jpg',0)
+plt.imshow(img)
+plt.show()
+
+
+# In[ ]:
+
+
+
+
+# In[ ]:
+
+U, s, V = np.linalg.svd(A, full_matrices=True)
+Ak = U[:,1:2]*s[1:2]*V[:,1:2].T
+print U
+print s
+print V
+print Ak
+
+
+# In[ ]:
+
+
+
+
+# In[ ]:
+
+
+
+
+# In[ ]:
+
+
+
+
+# In[ ]:
+
+
+

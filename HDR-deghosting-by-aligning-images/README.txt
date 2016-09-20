@@ -1,0 +1,47 @@
+/*****************************************************************************************************************/
+
+********************************** COMPUTATIONAL PHOTOGRAPHY PROJECT *****************************************
+NAME : 		ADITYA VORA
+ROLL NUMBER :	14410006
+DEPARTMENT :	ELECTRICAL ENGINEERING
+
+
+PROBLEM
+------------------------------------------------------------------------------------------------------------------------
+Given a stack of different exposed images of a dynamic scene our objective is to align the images of the stack w.r.t the 
+reference image R so that all the images in the stack are aligned.
+
+IMAGES : The current stack of images on which the code is running is stored in the data folder. Replace the folder with 
+	 another folder containing the stack of images.
+
+RESULTS : Results are stored in the result folder. Few results are already stored in the result folder.
+
+MAIN FILES:
+main.m = This is the main function that implements the HDR Deghosting algorithm.
+
+FUNCTION FILES: 
+generatePyr.m = Generates a gaussian pyramid of the input image given as a parameter.
+computeimfhist.m = Computes the intensity mapping function between two images given as input.[1][2]
+getlatentImages.m = Computes all the parameters in the algorithm i.e Nearest Neighbour fields, Intensity Mapping functions
+histPatchMatch.m = This function computes the histogram equilization of the both input images and returns the matched patches 
+		   in both the images.
+patchmatch.m = computes the patchmatch algorithm. 
+transfercolor.m = transfer's color from source image w.r.t the intensity mapping function.[1]
+--------------------------------------------------------------------------------------------------------------------------
+
+EXECUTION: 
+
+Run the main.m file in the code folder. The data folder already has a stack of images. Replace the folder with your own image 
+stack to run this code on other image stacks.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+REFERENCES:
+
+[1] Hu, J., Gallo, O., Pulli, K., & Sun, X. (2013, June). HDR deghosting: How to deal with saturation?. In 2013 IEEE Conference 
+    on Computer Vision and Pattern Recognition (pp. 1163-1170). IEEE.
+
+[2] Grossberg, M. D., & Nayar, S. K. (2003). Determining the camera response from images: What is knowable?. Pattern Analysis 
+    and Machine Intelligence, IEEE Transactions on, 25(11), 1455-1467.
+
+---------------------------------------------------------------------------------------------------------------------------

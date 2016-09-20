@@ -1,0 +1,35 @@
+## Programming Assignment 5 ##
+# Given two images, create a seamless composite image using Laplacian compositing #
+# Loading the required libraries
+import numpy as np
+import cv2
+import matplotlib.image as img
+import matplotlib.pyplot as plt
+from numpy import linalg as LA
+
+# Reading the two images to be blended
+A = img.imread('apple.jpg')
+B = img.imread('orange.jpg')
+
+# Plotting the two images
+plt.subplot(121),plt.imshow(A),plt.title('Original Image A')
+plt.xticks([]), plt.yticks([])
+
+plt.subplot(122),plt.imshow(B),plt.title('Original Image B')
+plt.xticks([]), plt.yticks([])
+plt.show()
+
+# generate Gaussian pyramid for A
+G = A.copy()
+gpA = [G]
+for i in xrange(6):
+    G = cv2.pyrDown(G)
+    gpA.append(G)
+
+# generate Gaussian pyramid for B
+G = B.copy()
+gpB = [G]
+for i in xrange(6):
+    G = cv2.pyrDown(G)
+    gpB.append(G)
+

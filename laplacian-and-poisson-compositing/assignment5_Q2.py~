@@ -1,0 +1,5 @@
+## Programming Assignment 5 ##
+# Given two images, create a seamless composite image using Laplacian compositing #
+
+
+import cv2

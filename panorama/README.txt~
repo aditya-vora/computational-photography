@@ -1,0 +1,36 @@
+/*****************************************************************************************************************/
+
+**********************************COMPUTATIONAL PHOTOGRAPHY ASSIGNMENT 4******************************************
+NAME : 		ADITYA VORA
+ROLL NUMBER :	14410006
+DEPARTMENT :	ELECTRICAL ENGINEERING
+
+
+PROBLEM	
+------------------------------------------------------------------------------------------------------------------
+Make a panorama image by stitching multiple images.
+
+IMAGES : 1) IMG_1.JPG
+	 2) IMG_2.JPG
+	 3) IMG_3.JPG
+	 4) IMG_4.JPG
+	 5) IMG_5.JPG
+	 6) IMG_6.JPG
+	 7) IMG_7.JPG
+	 8) IMG_8.JPG
+	 9) IMG_9.JPG
+	10) IMG_10.JPG
+
+RESULT : Panorama.JPG
+
+PROCEDURE:
+
+Initially we have multiple images of a scene which we are suppose to stitch. Here for this assignment we have 10 images.
+The methodology for creating the panorama is as follows:
+1) Compute the ORB features from the two images which we need to stitch. Thus we will get the keypoints and the feature 
+   descriptor for both the images
+2) After getting the keypoints and feature descriptor from both the image we will do the feature matching. And compute which
+   features match in both the images. By this procedure we shall get the common points between the two images.
+3) From the matched points between the two images we shall select the best matching points from both the images in order to compute 
+   the homography matrix.
+4)  
